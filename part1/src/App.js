@@ -37,7 +37,7 @@ const App = () => {
     return ( 
       <div>
         <p>
-          Name of exercise: {props.part1} {props.part2} {props.part3} |
+          Name of exercise: {props.part1} {props.part2} {props.part3} | 
           Number of exercises: {props.exercises1} {props.exercises2} {props.exercises3}
         </p>
       </div>
