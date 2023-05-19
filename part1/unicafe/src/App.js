@@ -13,7 +13,7 @@ const StatisticLine = ({ text, value }) => {
   )
 }
 
-/* en tiedä onko oikea ratkaisu mainittuun validateDOMNesting ongelmaan, mutta toimii*/
+/* en tiedä onko paras ratkaisu mainittuun validateDOMNesting ongelmaan, mutta toimii*/
 const Statistics = ({ good, neutral, bad, total, average, positive }) => {
   if (total === 0) {
     return (
