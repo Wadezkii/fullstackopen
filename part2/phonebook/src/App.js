@@ -23,9 +23,17 @@ const App = () => {
       number: newNum,
       id: persons.length + 1
     }
+    const updatedPersons = persons.concat(nameObject)
     setPersons(persons.concat(nameObject))
     setNewName('')
     setNewNum('')
+
+    if (filter) {
+      const filtered = updatedPersons.filter(person => person.content.toLowerCase().includes(filter.toLowerCase()))
+      setFilteredPersons(filtered)    
+    } else {
+      setFilteredPersons(updatedPersons)
+    }
     }
   }
 
