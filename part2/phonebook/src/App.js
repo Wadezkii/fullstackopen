@@ -1,25 +1,31 @@
 import { useState } from 'react'
 import Persons from './components/Persons'
 
-const App = (props) => {
-  const [persons, setPersons] = useState(props.persons) 
+const App = () => {
+  const [persons, setPersons] = useState([
+    { content: 'Arto Hellas' }
+  ])  
   const [newName, setNewName] = useState('')
 
   const addName = (event) => {
     event.preventDefault()
+    const existingPerson = persons.find(person => person.content === newName)
+    if (existingPerson) {
+      alert(`${newName} is already in the phonebook!`)
+    } else {
     const nameObject = {
       content: newName,
-      id: persons.length + 1,
+      id: persons.length + 1
     }
     setPersons(persons.concat(nameObject))
     setNewName('')
+    }
   }
 
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
   }
-
 
   return (
     <div>
