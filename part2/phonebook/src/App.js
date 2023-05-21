@@ -3,10 +3,14 @@ import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { content: 'Arto Hellas', number: '1234567890' }
+    { content: 'Arto Hellas', number: '1234567890' },
+    { content: 'Matti Meikäläinen', number: '222222'},
+    { content: 'Sanna Suomalainen', number: '555555'}
   ])  
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState('')
+  const [filter, setFilter] = useState('')
+  const [filteredPersons, setFilteredPersons] = useState(persons)
 
   const addName = (event) => {
     event.preventDefault()
@@ -31,12 +35,33 @@ const App = () => {
   const handleNumChange = (event) => {
     setNewNum(event.target.value)
   }
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+  }
+  const filterPersons = () => {
+    const filtered = persons.filter(person => person.content.toLowerCase().includes(filter.toLowerCase()))
+    setFilteredPersons(filtered)
+  }
+  const resetFilter = () => {
+    setFilter('')
+    setFilteredPersons(persons)
+  }
+  
+  
 
   return (
     <div>
       <h2>Phonebook</h2>
       <div>
         <div>
+          <form onSubmit={(event) => event.preventDefault()}>
+            <input value={filter} onChange={handleFilterChange} />
+            <button onClick={filterPersons}>filter</button>
+            <button onClick={resetFilter}>reset filter</button>
+          </form>
+        </div>
+        <div>
+          <h2>add new entry</h2>
           <form onSubmit={addName}>
             <div>
               name:
@@ -58,7 +83,7 @@ const App = () => {
       </div>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(persons =>
+        {filteredPersons.map(persons =>
           <Persons key={persons.content} persons={persons}/>
           )}
       </ul>
