@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getAllPersons, createPerson, deletePerson, updatePerson} from './services/persons'
 import axios from 'axios'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
@@ -11,11 +12,11 @@ const App = () => {
 
   useEffect (() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => {
+    getAllPersons()
+      .then((data) => {
         console.log('promise fulfilled')
-        setPersons(response.data)
+        setPersons(data)
+        setFilteredPersons(data)
       })
       }, [])
   
@@ -23,25 +24,42 @@ const App = () => {
   const addName = (newName, newNum) => {
     const existingPerson = persons.find(person => person.content === newName)
     if (existingPerson) {
-      alert(`${newName} is already in the phonebook!`)
+      const confirmReplace = window.confirm(`${newName} is already in the phonebook! Would you like to replace the existing number with the new number?`)
+
+      if (confirmReplace) {
+        const updatedPerson = {...existingPerson, number: newNum}
+        const updatedPersons = persons.map(person => person.id === existingPerson.id ? updatedPerson : person)
+
+        updatePerson(existingPerson.id, updatePerson)
+        .then(data => {
+          setPersons(updatedPersons)
+          setFilteredPersons(updatedPersons)
+        })
+      }
     } else {
-    const nameObject = {
-      content: newName,
-      number: newNum,
-      id: persons.length + 1
-    }
-    
-    axios
-      .post('http://localhost:3001/persons', nameObject)
-      .then((response) => {
-        console.log(response.data)
-        setPersons([...persons, response.data])
-        setFilteredPersons([...persons, response.data])
+      createPerson(newName, newNum)
+      .then((data) => {
+        console.log(data)
+        setPersons([...persons, data])
+        setFilteredPersons([...persons, data])
       })
       .catch((error) => {
-        console.log('error')
+        console.log('error', error)
       })
+    
     }
+  }
+
+  const handleDeletePerson = (id) => {
+    deletePerson(id)
+      .then(() => {
+        const updatedPersons = persons.filter((person) => person.id !== id)
+        setPersons(updatedPersons)
+        setFilteredPersons(updatedPersons)
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
   }
 
 
@@ -80,7 +98,7 @@ const App = () => {
       </div>
       <h2>Numbers</h2>
       {filteredPersons.map((person) => (
-        <Persons key={person.content} persons={person} />
+        <Persons key={person.content} persons={person} handleDeletePerson={handleDeletePerson} />
       ))}
     </div>
   )
