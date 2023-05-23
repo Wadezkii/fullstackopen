@@ -9,17 +9,15 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [filteredPersons, setFilteredPersons] = useState(persons)
 
-  const hook = () => {
+  useEffect (() => {
     console.log('effect')
     axios
       .get('http://localhost:3001/persons')
-      .then(response => {
+      .then((response) => {
         console.log('promise fulfilled')
         setPersons(response.data)
-        setFilteredPersons(response.data)
       })
-  }
-  useEffect(hook, [])
+      }, [])
   
 
   const addName = (newName, newNum) => {
@@ -32,17 +30,17 @@ const App = () => {
       number: newNum,
       id: persons.length + 1
     }
-    const updatedPersons = persons.concat(nameObject)
-    setPersons(persons.concat(nameObject))
-    setPersons(updatedPersons)
-    setFilteredPersons(updatedPersons)
-
-    if (filter) {
-      const filtered = updatedPersons.filter(person => person.content.toLowerCase().includes(filter.toLowerCase()))
-      setFilteredPersons(filtered)    
-    } else {
-      setFilteredPersons(updatedPersons)
-    }
+    
+    axios
+      .post('http://localhost:3001/persons', nameObject)
+      .then((response) => {
+        console.log(response.data)
+        setPersons([...persons, response.data])
+        setFilteredPersons([...persons, response.data])
+      })
+      .catch((error) => {
+        console.log('error')
+      })
     }
   }
 
