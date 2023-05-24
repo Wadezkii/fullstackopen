@@ -1,10 +1,6 @@
 {
   "persons": [
     {
-      "(id, updatedPerson) ": "> {\n  return axios__WEBPACK_IMPORTED_MODULE_0__[\"default\"].put(`${baseUrl}/${id}`, updatedPerson).then(response => response.data);\n}",
-      "id": 1
-    },
-    {
       "content": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": 2
@@ -13,11 +9,6 @@
       "content": "Dan Abramov",
       "number": "12-43-234345",
       "id": 3
-    },
-    {
-      "content": "qwerty",
-      "number": "123",
-      "id": 4
     }
   ]
 }

@@ -20,14 +20,14 @@ const PersonForm = ({ addName }) => {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} >
                 <div>
                     name:
-                    <input value={newName} onChange={handleNameChange} />
+                    <input name="name" value={newName} onChange={handleNameChange} />
                 </div>
                 <div>
                     number:
-                    <input value={newNum} onChange={handleNumChange} />
+                    <input name="number" value={newNum} onChange={handleNumChange} />
                 </div>
                 <button type="submit">add to phonebook</button>
             </form>
