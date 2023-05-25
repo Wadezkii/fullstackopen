@@ -4,11 +4,15 @@ import axios from 'axios'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import './index.css'
+import {DeletedNotif, AddedNotif} from './components/DeletedNotif'
 
 const App = () => {
   const [persons, setPersons] = useState([])  
   const [filter, setFilter] = useState('')
   const [filteredPersons, setFilteredPersons] = useState(persons)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [addedMessage, setAddedMessage] = useState(null)
 
   useEffect (() => {
     console.log('effect')
@@ -34,6 +38,12 @@ const App = () => {
         .then(data => {
           setPersons(updatedPersons)
           setFilteredPersons(updatedPersons)
+          setAddedMessage(
+            `${updatedPerson.content} was added to the phonebook`
+          )
+          setTimeout(() => {
+            setAddedMessage(null)
+          }, 5000);
         })
       }
     } else {
@@ -42,6 +52,12 @@ const App = () => {
         console.log(data)
         setPersons([...persons, data])
         setFilteredPersons([...persons, data])
+        setAddedMessage(
+          `${newName} was added to the phonebook`
+        )
+        setTimeout(() => {
+          setAddedMessage(null)
+        }, 5000);
       })
       .catch((error) => {
         console.log('error', error)
@@ -51,14 +67,29 @@ const App = () => {
   }
 
   const handleDeletePerson = (id) => {
+    const deletedPerson = persons.find((person) => person.id === id)
     deletePerson(id)
       .then(() => {
         const updatedPersons = persons.filter((person) => person.id !== id)
         setPersons(updatedPersons)
         setFilteredPersons(updatedPersons)
+        setErrorMessage(
+          `${deletedPerson.content} was deleted from the phonebook`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000);
       })
       .catch((error) => {
-        console.log('error', error)
+        setErrorMessage(
+          `${deletedPerson.content} has already been deleted from the phonebook`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000);
+        const updatedPersons = persons.filter((person) => person.id !== id)
+        setPersons(updatedPersons)
+        setFilteredPersons(updatedPersons)
       })
   }
 
@@ -83,6 +114,8 @@ const App = () => {
 
   return (
     <div>
+      <AddedNotif message={addedMessage}/>
+      <DeletedNotif message={errorMessage}/>
       <h1>Phonebook</h1>
       <Filter
         filter={filter}

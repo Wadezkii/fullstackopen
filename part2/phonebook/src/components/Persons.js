@@ -10,10 +10,10 @@ const Persons = ({ persons, handleDeletePerson }) => {
 
     return (
         <div>
-        <p>
-        {persons.content} - {persons.number}
-        <button onClick={confirmDelete}>delete</button>
-        </p>
+         <li className="names">
+          {persons.content} - {persons.number}
+          <button onClick={confirmDelete}>delete</button>
+         </li>
         </div>
     )
 }
