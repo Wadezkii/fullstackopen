@@ -9,15 +9,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "@powershell Remove-Item -Recurse -Force build && cd D:/Programming/github/fullstackopen/part2/phonebook && npm run build && @powershell Copy-Item build -Recurse D:/Programming/github/fullstackopen/part3/puhelinbackend",
     "deploy": "fly deploy",
-    "deploy:full": "npm run build:ui && npm run deploy",    
+    "deploy:full": "npm run build:ui && npm run deploy",
     "logs:prod": "fly logs"
-    
   },
   "author": "Weeti Tiirikainen",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "mongoose": "^7.2.1",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
