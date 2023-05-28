@@ -74,7 +74,7 @@ const App = () => {
         setPersons(updatedPersons)
         setFilteredPersons(updatedPersons)
         setErrorMessage(
-          `${deletedPerson.content} was deleted from the phonebook`
+          `${deletedPerson.name} was deleted from the phonebook`
         )
         setTimeout(() => {
           setErrorMessage(null)
@@ -82,7 +82,7 @@ const App = () => {
       })
       .catch((error) => {
         setErrorMessage(
-          `${deletedPerson.content} has already been deleted from the phonebook`
+          `${deletedPerson.name} has already been deleted from the phonebook`
         )
         setTimeout(() => {
           setErrorMessage(null)
@@ -99,7 +99,7 @@ const App = () => {
   }
   const filterPersons = () => {
     const filtered = persons.filter((person) =>
-      person.content.toLowerCase().includes(filter.toLowerCase())
+      person.name.toLowerCase().includes(filter.toLowerCase())
     )
     setFilteredPersons(filtered)
 
@@ -108,9 +108,6 @@ const App = () => {
     setFilter('')
     setFilteredPersons(persons)
   }
-
-  
-  
 
   return (
     <div>
@@ -131,7 +128,7 @@ const App = () => {
       </div>
       <h2>Numbers</h2>
       {filteredPersons.map((person) => (
-        <Persons key={person.content} persons={person} handleDeletePerson={handleDeletePerson} />
+        <Persons key={person.id} persons={person} handleDeletePerson={handleDeletePerson} />
       ))}
     </div>
   )

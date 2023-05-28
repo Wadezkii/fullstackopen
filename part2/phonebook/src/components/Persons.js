@@ -2,7 +2,7 @@ import { useState } from "react"
 
 const Persons = ({ persons, handleDeletePerson }) => {
     const confirmDelete = () => {
-        const result = window.confirm(`Are you sure you want to delete ${persons.content}?`)
+        const result = window.confirm(`Are you sure you want to delete ${persons.name}?`)
         if (result) {
             handleDeletePerson(persons.id)
         }
@@ -11,7 +11,7 @@ const Persons = ({ persons, handleDeletePerson }) => {
     return (
         <div>
          <li className="names">
-          {persons.content} - {persons.number}
+          {persons.name} - {persons.number}
           <button onClick={confirmDelete}>delete</button>
          </li>
         </div>
