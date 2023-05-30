@@ -26,20 +26,28 @@ const App = () => {
   
 
   const addName = (newName, newNum) => {
-    const existingPerson = persons.find(person => person.content === newName)
+    if (newName.length < 3 ) {
+      setErrorMessage('Name must be at least 3 characters long')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000);
+      return
+    }
+
+    const existingPerson = persons.find((person) => person.name === newName)
     if (existingPerson) {
       const confirmReplace = window.confirm(`${newName} is already in the phonebook! Would you like to replace the existing number with the new number?`)
 
       if (confirmReplace) {
-        const updatedPerson = {...existingPerson, number: newNum}
-        const updatedPersons = persons.map(person => person.id === existingPerson.id ? updatedPerson : person)
+        updatePerson(existingPerson.id, {number : newNum })
+        .then(updatedPerson => {
+          const updatedPersons = persons.map(person => 
+            person.id === existingPerson.id ? updatedPerson : person)
 
-        updatePerson(existingPerson.id, updatePerson)
-        .then(data => {
           setPersons(updatedPersons)
           setFilteredPersons(updatedPersons)
           setAddedMessage(
-            `${updatedPerson.content} was added to the phonebook`
+            `${updatedPerson.name} was updated in the phonebook`
           )
           setTimeout(() => {
             setAddedMessage(null)
@@ -60,7 +68,11 @@ const App = () => {
         }, 5000);
       })
       .catch((error) => {
-        console.log('error', error)
+        console.log(error.response.data)
+        setErrorMessage('Error adding name to the phonebook')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000);
       })
     
     }
@@ -81,9 +93,15 @@ const App = () => {
         }, 5000);
       })
       .catch((error) => {
-        setErrorMessage(
+        if (error.response && error.response.status === 404) {
+          setErrorMessage(
           `${deletedPerson.name} has already been deleted from the phonebook`
-        )
+      )
+        } else {
+          setErrorMessage(
+            `Error deleting ${deletedPerson.name} from the phonebook`
+          )
+        }
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000);
