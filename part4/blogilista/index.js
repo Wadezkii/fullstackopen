@@ -13,11 +13,16 @@ const blogSchema = mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb+srv://weeti:veQ6zBIMr7wI0WLR@cluster0.sy0ktfh.mongodb.net/?retryWrites=true&w=majority'
+const mongoUrl = 'mongodb+srv://wadsu:IHJYl806v2RnAxYZ@weetidb.m1qetvb.mongodb.net/?retryWrites=true&w=majority'
 mongoose.connect(mongoUrl)
+
 
 app.use(cors())
 app.use(express.json())
+
+app.get('/', (request, response) => {
+    response.send('<h1>bloglist</h>' + '<p>go to /api/blogs for listings</p>')
+})
 
 app.get('/api/blogs', (request, response) => {
   Blog
