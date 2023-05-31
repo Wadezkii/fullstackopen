@@ -6,7 +6,7 @@ const url = 'mongodb+srv://weeti:veQ6zBIMr7wI0WLR@cluster0.sy0ktfh.mongodb.net/?
 
 console.log('connecting to', url)
 mongoose.connect(url)
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch((error) => {
