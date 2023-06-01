@@ -1,7 +1,9 @@
 require('dotenv').config()
 
-let PORT = 3003
-let mongoUrl = "mongodb+srv://wadsu:IHJYl806v2RnAxYZ@weetidb.m1qetvb.mongodb.net/?retryWrites=true&w=majority"
+const PORT = process.env.PORT
+const mongoUrl = process.env.NODE_ENV === 'test'
+? process.env.TEST_mongoUrl
+: process.env.mongoUrl
 
 module.exports = {
   mongoUrl,

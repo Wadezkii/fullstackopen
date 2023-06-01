@@ -4,7 +4,10 @@ const mongoose = require('mongoose')
     title: String,
     author: String,
     url: String,
-    likes: Number
+    likes: {
+      type: Number,
+      default: 1
+    }
   })
 
   blogSchema.set('toJSON', {
