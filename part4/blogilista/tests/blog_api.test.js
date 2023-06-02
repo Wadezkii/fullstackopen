@@ -79,6 +79,25 @@ const response = await api
 expect(response.body.likes).toBe(1)
 })
 
+test('updating blog works', async () => {
+  const initialBlog = {
+    title: '',
+    author: '',
+    url: '',
+    likes: 1
+  }
+  
+})
+
+test('blog can be deleted' ,async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+  .delete(`/api/blogs/${blogToDelete.id}`)
+  .expect(204)
+})
+
 test('400 if no title or url', async () => {
   const newBlog = {
     author: "",
