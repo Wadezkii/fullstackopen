@@ -80,13 +80,19 @@ expect(response.body.likes).toBe(1)
 })
 
 test('updating blog works', async () => {
-  const initialBlog = {
-    title: '',
-    author: '',
-    url: '',
-    likes: 1
-  }
+  const initialBlog = await helper.blogsInDb()
+  const blogToEdit = initialBlog[0]
   
+  const updatedBlog = {
+    ...blogToEdit,
+    likes: 25
+  }
+  const response = await api
+  .put(`/api/blogs/${blogToEdit.id}`)
+  .send(updatedBlog)
+
+  expect(response.status).toBe(200)
+  expect(response.body.likes).toBe(25)
 })
 
 test('blog can be deleted' ,async () => {
