@@ -10,6 +10,12 @@ const initialBlogs = [
     },
     {
       title: "blog2",
+      author: "someone",
+      url: "no url",
+      likes: 12
+    },
+    {
+      title: "blog2",
       author: "me:)",
       url: "www.youtube.com",
       likes: 69
