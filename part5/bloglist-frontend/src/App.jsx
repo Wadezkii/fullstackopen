@@ -89,9 +89,11 @@ const App = () => {
     setAuthor('')
     setUrl('')
     setNotification({message: `A new blog ${title} by ${author} added successfully`, type: 'success'})
+    setBlogFormVisible(false)
     setTimeout(() => {
-      setNotification({message: null, type: null}, setBlogFormVisible(false))
+      setNotification({message: null, type: null})
     }, 5000)
+    
     
   } catch (exception) {
     console.error('Error adding blog', exception)
@@ -102,7 +104,6 @@ const hideWhenBlogFormVisible = { display: blogFormVisible ? 'none' : '' }
 const showWhenBlogFormVisible = { display: blogFormVisible ? '' : 'none' }
 
   if (user === null) {
-
     const hideWhenVisible = { display: loginVisible ? 'none' : ''}
     const showWhenVisible = { display: loginVisible ? '' : 'none'}
 
@@ -113,6 +114,7 @@ const showWhenBlogFormVisible = { display: blogFormVisible ? '' : 'none' }
             {notification.message}
           </div>
         )}
+        <h2 style={hideWhenVisible}>Welcome to bloghaven</h2>
         <div style={hideWhenVisible}>
           <button onClick={() => setLoginVisible(true)}>log in </button>
         </div>
