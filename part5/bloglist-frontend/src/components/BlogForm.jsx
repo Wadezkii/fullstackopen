@@ -1,5 +1,7 @@
 const BlogForm = ({ addBlog, title, setTitle, author, setAuthor, url, setUrl }) => {
-    return (
+    
+  
+  return (
       <div>
         <h2>create a new blog</h2>
         <form onSubmit={addBlog}>
