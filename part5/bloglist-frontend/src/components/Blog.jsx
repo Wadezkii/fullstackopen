@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog: initialBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
+  const [blog, setBlog] = useState(initialBlog)
 
   const toggleDetails = () => {
     setDetailsVisible(!detailsVisible)
@@ -21,6 +22,8 @@ const Blog = ({ blog }) => {
   const handleLike = async () => {
     try {
      const updatedBlog = {...blog, likes: blog.likes + 1, user: blog.user.id}
+     const updatedFromServer = await blogService.likeBlog(blog.id, updatedBlog)
+     setBlog(updatedFromServer)
      await blogService.likeBlog(blog.id, updatedBlog)
   } catch (error) {
 
