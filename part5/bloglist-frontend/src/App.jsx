@@ -8,13 +8,13 @@ import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [notification, setNotification] = useState({ message: null, type: null})
+  const [notification, setNotification] = useState({ message: null, type: null })
   const [loginVisible, setLoginVisible] = useState(false)
   const [blogFormVisible, setBlogFormVisible] = useState(false)
 
@@ -23,7 +23,7 @@ const App = () => {
       const sortedBlogs = fetchedBlogs.sort((a, b) => b.likes - a.likes)
       setBlogs(sortedBlogs)
     }
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const App = () => {
     }
   }, [])
 
-  
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -49,14 +49,14 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      setNotification({message: 'successful login', type: 'success'})
+      setNotification({ message: 'successful login', type: 'success' })
       setTimeout(() => {
-        setNotification({message: null, type: null})
+        setNotification({ message: null, type: null })
       }, 5000)
     } catch (exception) {
-      setNotification({message: 'wrong credentials', type: 'error'})
+      setNotification({ message: 'wrong credentials', type: 'error' })
       setTimeout(() => {
-        setNotification({message: null, type: null})
+        setNotification({ message: null, type: null })
       }, 5000)
     }
   }
@@ -64,50 +64,51 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-    setNotification({message: 'logged out', type: 'success'})
-      setTimeout(() => {
-        setNotification({message: null, type: null})
-      }, 5000)
+    setNotification({ message: 'logged out', type: 'success' })
+    setTimeout(() => {
+      setNotification({ message: null, type: null })
+    }, 5000)
   }
-  
+
   const addBlog = async (event) => {
     event.preventDefault()
-  
-  try {
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url,
+
+    try {
+      const newBlog = {
+        title: title,
+        author: author,
+        url: url,
+      }
+      await blogService.create(newBlog)
+      const updatedBlogs = await blogService.getAll()
+      setBlogs(updatedBlogs)
+
+      const response = await blogService.create(newBlog)
+      console.log(response)
+
+      setBlogs(updatedBlogs)
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setNotification({ message: `A new blog ${title} by ${author} added successfully`, type: 'success' })
+      setBlogFormVisible(false)
+      setTimeout(() => {
+        setNotification({ message: null, type: null })
+      }, 5000)
+
+
+    } catch (exception) {
+      console.error('Error adding blog', exception)
     }
-    await blogService.create(newBlog)
-    const updatedBlogs = await blogService.getAll()
-    setBlogs(updatedBlogs)
-
-    const response = await blogService.create(newBlog)
-    console.log(response)
-
-    setBlogs(updatedBlogs)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setNotification({message: `A new blog ${title} by ${author} added successfully`, type: 'success'})
-    setBlogFormVisible(false)
-    setTimeout(() => {
-      setNotification({message: null, type: null})
-    }, 5000)
-    
-    
-  } catch (exception) {
-    console.error('Error adding blog', exception)
   }
-}
 
-const hideWhenBlogFormVisible = { display: blogFormVisible ? 'none' : '' }
-const showWhenBlogFormVisible = { display: blogFormVisible ? '' : 'none' }
+
+  const hideWhenBlogFormVisible = { display: blogFormVisible ? 'none' : '' }
+  const showWhenBlogFormVisible = { display: blogFormVisible ? '' : 'none' }
 
   if (user === null) {
-    const hideWhenVisible = { display: loginVisible ? 'none' : ''}
-    const showWhenVisible = { display: loginVisible ? '' : 'none'}
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
 
     return (
       <div>
@@ -121,15 +122,15 @@ const showWhenBlogFormVisible = { display: blogFormVisible ? '' : 'none' }
           <button onClick={() => setLoginVisible(true)}>log in </button>
         </div>
         <div style={showWhenVisible}>
-        <LoginForm 
-        handleLogin={handleLogin} 
-        username={username} 
-        setUsername={setUsername} 
-        password={password} 
-        setPassword={setPassword} 
-      />
-      <button onClick={() => setLoginVisible(false)}>cancel login</button>
-      </div>
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel login</button>
+        </div>
       </div>
     )
   }
@@ -143,27 +144,27 @@ const showWhenBlogFormVisible = { display: blogFormVisible ? '' : 'none' }
           </div>
         )}
       </div>
-      <p>{user.name} logged in <button onClick={handleLogout} type='submit'>logout</button></p> 
+      <p>{user.name} logged in <button onClick={handleLogout} type='submit'>logout</button></p>
       <h2>blogs</h2>
       {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} loggedInUser={user} />
       ))}
       <div>
         <div style={hideWhenBlogFormVisible}>
           <button onClick={() => setBlogFormVisible(true)}>Create new blog</button>
         </div>
         <div style={showWhenBlogFormVisible}>
-      <BlogForm 
-        addBlog={addBlog}
-        title={title}
-        setTitle={setTitle}
-        author={author}
-        setAuthor={setAuthor}
-        url={url}
-        setUrl={setUrl}
-      />
-      <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
-      </div>
+          <BlogForm
+            addBlog={addBlog}
+            title={title}
+            setTitle={setTitle}
+            author={author}
+            setAuthor={setAuthor}
+            url={url}
+            setUrl={setUrl}
+          />
+          <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
+        </div>
       </div>
     </div>
   )
