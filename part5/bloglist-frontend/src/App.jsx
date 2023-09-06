@@ -19,8 +19,10 @@ const App = () => {
   const [blogFormVisible, setBlogFormVisible] = useState(false)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+    blogService.getAll().then(fetchedBlogs => {
+      const sortedBlogs = fetchedBlogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(sortedBlogs)
+    }
     )  
   }, [])
 
