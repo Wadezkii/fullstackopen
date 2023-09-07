@@ -38,9 +38,6 @@ const Blog = ({ blog: initialBlog, loggedInUser }) => {
       }
   }
 
-  console.log(typeof loggedInUser.id, loggedInUser.id)
-  console.log(typeof blog.user.id, blog.user.id)
-  console.log(loggedInUser)
   return (
     <div>
       <div>
