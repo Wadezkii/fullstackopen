@@ -103,6 +103,7 @@ const App = () => {
   }
 
 
+  console.log(process.env.NODE_ENV)
   const hideWhenBlogFormVisible = { display: blogFormVisible ? 'none' : '' }
   const showWhenBlogFormVisible = { display: blogFormVisible ? '' : 'none' }
 

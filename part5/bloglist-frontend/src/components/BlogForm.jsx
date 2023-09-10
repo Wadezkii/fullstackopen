@@ -6,6 +6,7 @@ const BlogForm = ({ addBlog, title, setTitle, author, setAuthor, url, setUrl }) 
         <div>
             Title
           <input
+          name="title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -14,6 +15,7 @@ const BlogForm = ({ addBlog, title, setTitle, author, setAuthor, url, setUrl }) 
         <div>
             Author
           <input
+            name="author"
             type="text"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
@@ -22,6 +24,7 @@ const BlogForm = ({ addBlog, title, setTitle, author, setAuthor, url, setUrl }) 
         <div>
             URL
           <input
+            name="url"
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
