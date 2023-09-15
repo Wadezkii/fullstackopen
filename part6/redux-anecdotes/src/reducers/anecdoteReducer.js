@@ -17,7 +17,10 @@ const asObject = (anecdote) => {
   }
 }
 
-const initialState = anecdotesAtStart.map(asObject)
+const initialState =  {
+  anecdotes: anecdotesAtStart.map(asObject),
+  filter: '',
+}
 
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
@@ -38,6 +41,9 @@ const reducer = (state = initialState, action) => {
       const anecdote = action.payload.content
       return [...state, asObject(anecdote)]
 
+    case 'SET_FILTER':
+      return {...state, filter: action.payload.filter}
+
     default:
       return state
   }
@@ -54,6 +60,13 @@ export const vote = (id) => {
   return{
     type: 'VOTE',
     payload: { id }
+  }
+}
+
+export const setFilter = (filter) => {
+  return {
+    type: 'SET_FILTER',
+    payload: { filter }
   }
 }
 
