@@ -41,7 +41,10 @@ const reducer = (state = initialState, action) => {
       }
     case 'ADD':
       const anecdote = action.payload.content
-      return [...state, asObject(anecdote)]
+      return {
+        ...state,
+        anecdotes: [...state.anecdotes, asObject(anecdote)]
+      }
 
     case 'SET_FILTER':
       return {...state, filter: action.payload.filter}

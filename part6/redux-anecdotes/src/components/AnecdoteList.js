@@ -14,7 +14,7 @@ const Anecdote = ({ anecdote, handleClick}) => {
 }
 
 const AnecdoteList = () => {
-const anecdotes = useSelector(state => state.anecdotes)
+const anecdotes = useSelector(state => state.anecdotes.anecdotes)
 const dispatch = useDispatch()
 
 const filter = useSelector(state => state.filter)
