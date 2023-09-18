@@ -1,3 +1,6 @@
+import { createSlice } from '@reduxjs/toolkit'
+import { setNotification, clearNotification } from './notifReducer'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -22,58 +25,49 @@ const initialState =  {
   filter: '',
 }
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-
-  switch(action.type) {
-    case 'VOTE':
-      const id = action.payload.id
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    vote: (state, action) => {
+      const id = action.payload
       const anecdoteToChange = state.anecdotes.find(n => n.id === id)
-      const changedAnecdote = {
-        ...anecdoteToChange,
-        votes: anecdoteToChange.votes + 1
-      }
-      return {
-        ...state,
-        anecdotes: state.anecdotes.map(anecdote => 
-          anecdote.id !== id ? anecdote : changedAnecdote)
-      }
-    case 'ADD':
-      const anecdote = action.payload.content
-      return {
-        ...state,
-        anecdotes: [...state.anecdotes, asObject(anecdote)]
-      }
+      anecdoteToChange.votes += 1
 
-    case 'SET_FILTER':
-      return {...state, filter: action.payload.filter}
-
-    default:
-      return state
+    },
+    createAnecdote: (state, action) => {
+      state.anecdotes.push(asObject(action.payload))
+    },
+    setFilter: (state, action) => {
+      state.filter = action.payload.filter
+    }
   }
-  
-}
+})
 
-export const createAnecdote = (content) => { return {
-  type: 'ADD',
-  payload: {content}
-}}
+export const voteAnecdote = (id) => {
+  return (dispatch, getState) => {
+    dispatch(vote(id))
+    const votedAnecdote = getState().anecdotes.anecdotes.find(n => n.id === id)
+    dispatch(setNotification(`you voted '${votedAnecdote.content}'`))
 
-export const vote = (id) => {
-  console.log('vote', id)
-  return{
-    type: 'VOTE',
-    payload: { id }
+    setTimeout(() => {
+      dispatch(clearNotification())
+    }, 5000)
   }
 }
 
-export const setFilter = (filter) => {
-  return {
-    type: 'SET_FILTER',
-    payload: { filter }
+export const addAnecdote = (content) => {
+  return (dispatch) => {
+    const newAnecdote = asObject(content)
+    dispatch(createAnecdote(newAnecdote.content))
+
+    dispatch(setNotification(`added '${newAnecdote.content}'`))
+
+    setTimeout(() => {
+      dispatch(clearNotification())
+    }, 5000)
   }
 }
 
-
-export default reducer
+export const { vote, createAnecdote, setFilter } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
