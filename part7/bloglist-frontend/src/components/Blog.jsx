@@ -1,24 +1,13 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog: initialBlog, loggedInUser }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
   const [blog, setBlog] = useState(initialBlog)
 
-  const toggleDetails = () => {
-    setDetailsVisible(!detailsVisible)
-  }
 
-  if (!detailsVisible) {
-    return (
-      <div>
-        {blog.title} {blog.author}
-        <button onClick={toggleDetails}>view</button>
-      </div>
-    )
-  }
-
-  const handleLike = async () => {
+  const  handleLike= async () => {
     try {
       const updatedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
       const updatedFromServer = await blogService.likeBlog(blog.id, updatedBlog)
@@ -41,21 +30,9 @@ const Blog = ({ blog: initialBlog, loggedInUser }) => {
   return (
     <div>
       <div>
-        {blog.title} {blog.author} <button onClick={toggleDetails}>hide</button>
+      <Link to={`/blogs/${blog.id}`}>{blog.title} - {blog.author} </Link> 
       </div>
-      <div>
-        URL: {blog.url}
       </div>
-      <div>
-        Likes: {blog.likes} <button onClick={handleLike}>like</button>
-      </div>
-      <div>
-        Added by: {blog.user.name}
-      </div>
-      {loggedInUser && loggedInUser.name === blog.user.name && (
-        <button onClick={handleDelete}>delete</button>
-      )}
-    </div>
   )
 }
 

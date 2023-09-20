@@ -9,7 +9,8 @@ import { connect } from 'react-redux'
 import { setNotification } from './actions/notificationActions'
 import Users from './components/Users'
 import UserDetails from './components/UserDetails'
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom'
+import BlogDetails from './components/BlogDetails'
+import { BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom'
 
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
@@ -182,6 +183,8 @@ const App = (props) => {
 
         <Route path="/users" element={<Users />} />
         <Route path="/users/:id" element={<UserDetails />} /> 
+        <Route path="/blogs/:id" element={<BlogDetails />} />
+
       </Routes>
     </div>
   </Router>

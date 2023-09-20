@@ -8,11 +8,11 @@ const mongoose = require('mongoose')
       type: Number,
       default: 1
     },
-
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
-    }
+    },
+    comments: [String]
   })
 
   blogSchema.set('toJSON', {
