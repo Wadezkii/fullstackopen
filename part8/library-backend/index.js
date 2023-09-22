@@ -1,5 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { v1: uuid } = require('uuid')
 
 let authors = [
   {
@@ -101,12 +102,13 @@ const typeDefs = `
 type Author {
     name: String!
     bookCount: Int!
+    born: Int
 }
 
   type Query {
     authorCount: Int!,
     bookCount: Int!,
-    allBooks(author: String): [Book!]!,
+    allBooks(author: String, genre: String): [Book!]!,
     allAuthors: [Author!]!,
     findAuthor(name: String!): Author
   }
@@ -116,6 +118,19 @@ type Author {
     published: Int!
     author: String!
     genres: [String!]!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ) : Book
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ) : Author
   }
 
   
@@ -128,7 +143,9 @@ const resolvers = {
     allBooks: (root, args) => {
       if (args.author) {
         return books.filter(book => book.author === args.author)
-      } 
+      } if (args.genre) {
+        return books.filter(book => book.genres.includes(args.genre))
+      }
       return books
     },
     allAuthors: () => authors,
@@ -138,6 +155,31 @@ const resolvers = {
     bookCount: (author) => {
       return books.filter(book => book.author === author.name).length
         }
+    },
+
+    Mutation: {
+      addBook: (root, args) => {
+        const book = {...args, id: uuid()}
+        books = books.concat(book)
+
+        const authorExist = authors.find(author => author.name === args.author)
+        if (!authorExist) {
+          authors = authors.concat({
+            name: args.author,
+            id: uuid()
+          })
+        }
+        return book
+      },
+      editAuthor: (root, args) => {
+        const author = authors.find(author => author.name === args.name)
+        if (!author) {
+          return null
+        }
+        const updatedAuthor = {...author, born: args.setBornTo}
+        authors = authors.map(author => author.name === args.name ? updatedAuthor : author)
+        return updatedAuthor
+      }
     }
 }
 
