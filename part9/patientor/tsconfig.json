@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "../patientor-backend/src/services/diagnosesService.ts"  ]
 }
