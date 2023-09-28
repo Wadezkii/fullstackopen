@@ -11,8 +11,8 @@ interface ExcersiseValues {
 }
 
 const calculateExercises = (dailyHours: number[], target: number): ExcersiseValues => {
-    let periodLength = dailyHours.length;
-    let trainingDays = dailyHours.filter(hours => hours !== 0).length;
+    const periodLength = dailyHours.length;
+    const trainingDays = dailyHours.filter(hours => hours !== 0).length;
     const average = dailyHours.reduce((acc, curr) => acc + curr, 0) / periodLength;
     let rating = 0;
     let ratingDescription = '';
@@ -38,7 +38,7 @@ const calculateExercises = (dailyHours: number[], target: number): ExcersiseValu
         target,
         average
     };
-}
+};
 
 const parseArguments = (args: string[]): [number, number[]] => {
     if (args.length < 4) throw new Error('Not enough arguments');
@@ -50,14 +50,15 @@ const parseArguments = (args: string[]): [number, number[]] => {
     }
   
     return [Number(target), hours.map(hour => Number(hour))];
-  }
+  };
   
   try {
       const [target, dailyHours] = parseArguments(process.argv);
       const result = calculateExercises(dailyHours, target);
       console.log(result);
-  } catch (e) {
-      console.log('Error:', e.message);
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      console.log('Error:', error.message);
   }
 
 export default calculateExercises;
