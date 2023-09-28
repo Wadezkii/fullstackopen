@@ -20,6 +20,7 @@ export interface Patient {
 }
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+export type NewPatientEntry = Omit<Patient, 'id'>;
 
 export interface Diagnosis {
   code: string;
