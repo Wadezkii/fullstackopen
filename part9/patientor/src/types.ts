@@ -27,3 +27,32 @@ export interface Diagnosis {
   name: string;
   latin?: string;
 }
+
+export interface OccupationalHealthcareEntry {
+  type: "OccupationalHealthcare";
+  id: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: string[];
+  description: string;
+  employerName: string;
+  sickLeave?: {
+    startDate: string;
+    endDate: string;
+  };
+}
+
+export interface HospitalEntry {
+  type: "Hospital";
+  id: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: string[];
+  description: string;
+  discharge: {
+    date: string;
+    criteria: string;
+  };
+}
+
+export type Entry = OccupationalHealthcareEntry | HospitalEntry;

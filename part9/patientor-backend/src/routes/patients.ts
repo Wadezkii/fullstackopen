@@ -36,4 +36,30 @@ router.post('/api/patients', (req, res) => {
     }
 });
 
+router.post('/:id/entries', (req, res) => {
+    const { id } = req.params;
+    const patient = patients.find(p => p.id === id);
+
+    if (!patient){
+        return res.status(400).json({ error: 'Patient not found' });
+    }
+
+    try {
+        const {type, description, date, diagnosisCodes} = req.body;
+        if (!type || !description || !date || !diagnosisCodes){
+            return res.status(400).json({ error: 'Missing data' });
+        }
+        const newEntry = {
+            id: uuid(),
+            type,
+            description,
+            date,
+            diagnosisCodes: diagnosisCodes || []
+        };
+        res.json(newEntry);
+    } catch (error) {
+        return res.status(400).send((error as Error).message);
+    }
+})
+
 export default router;

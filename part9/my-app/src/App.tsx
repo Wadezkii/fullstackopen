@@ -6,20 +6,20 @@ import Total from "./components/Total";
 interface CoursePartBase {
   name: string;
   exerciseCount: number;
-};
+}
 
 interface DescriptivePart extends CoursePartBase {
   description: string;
-};
+}
 
 interface CoursePartBasic extends DescriptivePart {
   kind: "basic";
-};
+}
 
 interface CoursePartGroup extends CoursePartBase {
   groupProjectCount: number;
   kind: "group";
-};
+}
 
 interface CoursePartBackground extends DescriptivePart {
   backgroundMaterial: string;
