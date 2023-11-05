@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery, useSubscription } from '@apollo/client'
 
 const ALL_BOOKS = gql`
   query {
@@ -9,6 +9,16 @@ const ALL_BOOKS = gql`
     }
   }
 `
+
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+      author
+      published
+    }
+  }
+`;
 
 const Books = (props) => {
   const { loading, data } = useQuery(ALL_BOOKS, {
@@ -22,6 +32,8 @@ const Books = (props) => {
   if (!props.show) {
     return null
   }
+
+  const { data: subscriptionData } = useSubscription(BOOK_ADDED)
 
   const books = data.allBooks
 

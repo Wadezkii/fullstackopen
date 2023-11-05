@@ -1,6 +1,8 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { v1: uuid } = require('uuid')
+const Book = require('./models/bookModel')
+const Author = require('./models/authorModel')
 
 let authors = [
   {
@@ -105,6 +107,16 @@ type Author {
     born: Int
 }
 
+type User {
+  username: String!
+  favoriteGenre: String!
+  id: ID!
+}
+
+type Token {
+  value: String!
+}
+
   type Query {
     authorCount: Int!,
     bookCount: Int!,
@@ -114,9 +126,10 @@ type Author {
   }
 
   type Book {
+    id: ID!
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     genres: [String!]!
   }
 
@@ -131,55 +144,80 @@ type Author {
       name: String!
       setBornTo: Int!
     ) : Author
+    createUser(username: String!, favoriteGenre: String!): User
+    login(username: String!, password: String!): Token
   }
+
 
   
 `
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
+    me: (root, args, context) => context.currentUser,
+    bookCount: async () => await Book.countDocuments(),
+    authorCount: async () => await Author.countDocuments(),
+    allBooks: async (root, args) => {
       if (args.author) {
-        return books.filter(book => book.author === args.author)
-      } if (args.genre) {
-        return books.filter(book => book.genres.includes(args.genre))
+        return await Book.find({ author: args.author }).populate('author');
       }
-      return books
+      if (args.genre) {
+        return await Book.find({ genres: args.genre }).populate('author');
+      }
+      return await Book.find({}).populate('author');
     },
-    allAuthors: () => authors,
-    },
+    allAuthors: async () => await Author.find({}),
+    findAuthor: async (root, args) => await Author.findOne({ name: args.name }),
+  },
 
   Author: {
-    bookCount: (author) => {
-      return books.filter(book => book.author === author.name).length
-        }
-    },
+    bookCount: async (author) => await Book.countDocuments({ author: author.id }),
+  },
 
-    Mutation: {
-      addBook: (root, args) => {
-        const book = {...args, id: uuid()}
-        books = books.concat(book)
-
-        const authorExist = authors.find(author => author.name === args.author)
-        if (!authorExist) {
-          authors = authors.concat({
-            name: args.author,
-            id: uuid()
-          })
+  Mutation: {
+    addBook: async (root, args) => {
+      try {
+        if (args.title.length < 5) {
+          throw new UserInputError('Book title is too short', {
+            invalidArgs: args.title,
+          });
         }
-        return book
-      },
-      editAuthor: (root, args) => {
-        const author = authors.find(author => author.name === args.name)
+
+        if (args.author.length < 4) {
+          throw new UserInputError('Author name is too short', {
+            invalidArgs: args.author,
+          });
+        }
+
+        const author = await Author.findOne({ name: args.author });
+
         if (!author) {
-          return null
+          const newAuthor = new Author({ name: args.author });
+          await newAuthor.save();
         }
-        const updatedAuthor = {...author, born: args.setBornTo}
-        authors = authors.map(author => author.name === args.name ? updatedAuthor : author)
-        return updatedAuthor
+
+        const book = new Book({ ...args, author: author._id });
+        await book.save();
+        return book;
+      } catch (error) {
+        throw error;
       }
+    },
+    editAuthor: async (root, args) => {
+      try {
+        const author = await Author.findOne({ name: args.name });
+        if (!author) {
+          throw new UserInputError('Author not found', {
+            invalidArgs: args.name,
+          });
+        }
+        author.born = args.setBornTo;
+        await author.save();
+        return author;
+      } catch (error) {
+        throw error;
+      }
+    }
     }
 }
 

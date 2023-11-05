@@ -13,6 +13,7 @@
   "type": "commonjs",
   "dependencies": {
     "@apollo/server": "^4.9.3",
-    "graphql": "^16.8.1"
+    "graphql": "^16.8.1",
+    "mongoose-unique-validator": "^4.0.0"
   }
 }
