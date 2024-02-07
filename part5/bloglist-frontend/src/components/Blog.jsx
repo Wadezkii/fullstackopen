@@ -18,7 +18,7 @@ const Blog = ({ blog: initialBlog, loggedInUser }) => {
     )
   }
 
-  const handleLike = async () => {
+  const  handleLike= async () => {
     try {
       const updatedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
       const updatedFromServer = await blogService.likeBlog(blog.id, updatedBlog)
